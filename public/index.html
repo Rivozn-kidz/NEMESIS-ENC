@@ -1,71 +1,107 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>NEMESIS ENC |  JS Obfuscator</title>
-    <!-- Bootstrap CSS (dark theme override) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEMESIS - Professional JavaScript Obfuscator</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 6 -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts for modern monospace -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
+         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* ----- FULL BLACKOUT THEME ----- */
         body {
             background-color: #000000;
             background-image: radial-gradient(rgba(30, 30, 30, 0.6) 1px, transparent 1px);
             background-size: 32px 32px;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: #eaeef2;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #74070e;
         }
 
-        /* header & footer - deep black with subtle neon pulse */
+
+
         .header-bg {
-            background: #030303;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 12px rgba(0, 255, 255, 0.05);
+            background: var(--primary-gradient);
+            color: white;
         }
 
-        footer {
-            background: #010101;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: #aaa;
-        }
-
-        /* cards - larger, pure black, with refined glass effect */
         .card {
             background-color: #0b0b0c;
             border: 1px solid rgba(50, 50, 55, 0.8);
             border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-            transition: transform 0.2s ease, box-shadow 0.2s;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.8);
         }
 
-        .card:hover {
-            box-shadow: 0 24px 42px -16px black;
+        .security-level-btn i {
+            margin-right: 4px;
         }
 
-        /* larger text areas (boxes) */
-        textarea {
+        .security-level-btn:hover {
+            transform: translateY(-1px);
+            background: #18181e;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .security-level-btn.active {
+            background: linear-gradient(135deg, #1a1a24, #0f0f14);
+            border-width: 1.5px;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+            color: white;
+        }
+
+        .security-level-btn[data-level="basic"].active {
+            border-color: #6c757d;
+            background: rgba(108, 117, 125, 0.1);
+        }
+
+        .security-level-btn[data-level="standard"].active {
+            border-color: #0d6efd;
+            background: rgba(13, 110, 253, 0.1);
+        }
+
+        .security-level-btn[data-level="advanced"].active {
+            border-color: #6610f2;
+            background: rgba(102, 16, 242, 0.1);
+        }
+
+        .security-level-btn[data-level="enterprise"].active {
+            border-color: #d63384;
+            background: rgba(214, 51, 132, 0.1);
+        }
+
+        .security-level-btn[data-level="ultra"].active {
+            border-color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+      .security-level-btn {
+            background: #0f0f12;
+            border: 1px solid #74070e;
+            color: #dddddd;
+            padding: 12px 20px;
+            border-radius: 44px;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            min-width: 110px;
+        }
+
+                textarea {
             min-height: 260px !important;
             background-color: #000000 !important;
             border: 1.5px solid #2a2a2f !important;
             color: #eef4ff !important;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
             padding: 18px 20px !important;
             border-radius: 20px !important;
-            transition: all 0.2s;
             resize: vertical;
-            letter-spacing: -0.2px;
             line-height: 1.5;
         }
 
@@ -75,129 +111,27 @@
             outline: none;
         }
 
-        /* inputs / labels - larger friendly */
         .form-label {
             font-weight: 700;
             font-size: 1.1rem;
             margin-bottom: 12px;
             color: #f0f3f8;
-            letter-spacing: -0.2px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .form-text {
-            color: #8e8e9e !important;
-            font-size: 0.8rem;
-            margin-top: 10px;
+        #output {
+            background-color: #f8f9fa;
         }
 
-        /* security buttons - larger, black-card style */
-        .security-level-btn {
-            background: #0f0f12;
-            border: 1px solid #28282e;
-            color: #dddddd;
-            padding: 12px 24px;
-            border-radius: 44px;
-            font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            backdrop-filter: blur(2px);
-            font-size: 0.9rem;
-        }
-
-        .security-level-btn i {
-            margin-right: 10px;
-            font-size: 1rem;
-        }
-
-        .security-level-btn:hover {
-            transform: translateY(-3px);
-            background: #18181e;
-            border-color: #3b82f6;
+        footer {
+            background: var(--secondary-gradient);
             color: white;
         }
 
-        /* active state glow with specific accent per level (but refined black) */
-        .security-level-btn.active {
-            background: #111217;
-            border-width: 1.5px;
-            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
-            color: white;
-        }
-
-        .security-level-btn[data-level="basic"].active { border-color: #6c757d; box-shadow: 0 0 8px rgba(108,117,125,0.4); }
-        .security-level-btn[data-level="standard"].active { border-color: #3b82f6; box-shadow: 0 0 10px #3b82f6aa; }
-        .security-level-btn[data-level="advanced"].active { border-color: #a855f7; box-shadow: 0 0 12px #a855f7aa; }
-        .security-level-btn[data-level="enterprise"].active { border-color: #ec489a; box-shadow: 0 0 12px #ec489aaa; }
-        .security-level-btn[data-level="ultra"].active { border-color: #ef4444; box-shadow: 0 0 14px #ef4444aa; }
-
-        /* performance meter - dark theme */
-        .performance-meter {
-            height: 6px;
-            background: #1e1e24;
-            border-radius: 6px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-        .performance-meter-fill {
-            height: 100%;
-            width: 75%;
-            background: linear-gradient(90deg, #2dd4bf, #3b82f6);
-            border-radius: 6px;
-            transition: width 0.3s ease;
-        }
-
-        /* buttons primary & outlines */
-        .btn-primary {
-            background: #0a0a0e;
-            border: 1px solid #2c2c34;
-            color: white;
-            font-weight: 700;
-            padding: 14px;
-            border-radius: 44px;
-            transition: 0.2s;
-            font-size: 1rem;
-        }
-        .btn-primary:hover {
-            background: #1e1e28;
-            border-color: #3b82f6;
-            transform: scale(1.01);
-        }
-        .btn-outline-primary, .btn-outline-dark, .btn-success {
-            background: transparent;
-            border: 1px solid #2c2c34;
-            color: #cdd9ff;
-            border-radius: 40px;
-            padding: 12px;
-            font-weight: 500;
-        }
-        .btn-outline-primary:hover, .btn-success:hover {
-            background: #111116;
-            border-color: #3b82f6;
-            color: white;
-        }
-        .btn-success {
-            border-color: #2e7d64;
-        }
-        .btn-success:hover {
-            background: #0f2c24;
-            border-color: #2dd4bf;
-        }
-
-        /* badge styles inside security level buttons */
-        .badge-pill-custom {
-            background: #1f1f2a;
-            color: #cbd5e6;
-            margin-left: 8px;
-            padding: 2px 8px;
-            border-radius: 40px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        /* toast notification (dark) */
-        .toast-custom {
+   
+        toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
@@ -207,170 +141,233 @@
             border-left: 4px solid #3b82f6;
             border-radius: 20px;
             padding: 12px 24px;
-            font-weight: 500;
             z-index: 1200;
             font-size: 0.9rem;
             box-shadow: 0 12px 24px rgba(0,0,0,0.5);
-            transition: opacity 0.2s;
-            font-family: monospace;
-        }
-
-        .hidden-toast {
-            display: none;
         }
 
         .security-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 100;
             display: none;
+            min-width: 200px;
+            padding: 8px;
+            background: 74070e;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 12px;
         }
 
-        /* larger containers on mobile feel spacious */
-        .container {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
+        .security-level-btn:hover .security-tooltip {
+            display: block;
         }
 
-        @media (max-width: 768px) {
-            .security-level-btn {
-                padding: 8px 16px;
-                font-size: 0.75rem;
-            }
-            textarea {
-                min-height: 220px !important;
-            }
+        .performance-meter {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
         }
 
-        /* additional shine */
-        h1, .lead {
-            text-shadow: 0 2px 3px rgba(0,0,0,0.4);
+        .performance-meter-fill {
+            height: 100%;
+            transition: width 0.3s ease;
         }
-        .fa-lock, .fa-user-secret {
-            filter: drop-shadow(0 0 2px cyan);
+                .btn-primary {
+            background: linear-gradient(135deg, #0f0f14, #08080c);
+            border: 1px solid #74070e;
+            color: white;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 44px;
+            font-size: 1rem;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1a1a24, #101014);
+            border-color: #3b82f6;
+        }
+        
+        .btn-outline-primary, .btn-success {
+            background: transparent;
+            border: 1px solid #2c2c34;
+            color: #cdd9ff;
+            border-radius: 40px;
+            padding: 12px;
+            font-weight: 500;
+        }
+        
+        .btn-outline-primary:hover, .btn-success:hover {
+            background: #111116;
+            border-color: #3b82f6;
+            color: white;
         }
     </style>
 </head>
 <body>
-
-    <!-- Header - black elegance -->
+    <!-- Header -->
     <header class="header-bg py-5 mb-5">
         <div class="container text-center">
             <h1 class="fw-bold display-4 mb-3">
-                <i class="fas fa-skull me-2"></i> NEMESIS · OBFUSCATOR
+                <i class="fas fa-lock me-2"></i> NEMESIS/> OBFUSCATOR BETA
             </h1>
-            <p class="lead opacity-75">
-                <i class="fas fa-dragon me-1"></i> Military-grade protection · Larger controls // enterprise obfuscation engine
+            <p class="lead mb-0">
+                Military-grade JavaScript protection with security levels by Ridz coder
             </p>
-            <div class="mt-2 small text-secondary">
-                <i class="fas fa-shield-hooded"></i> Ridz Coder Created 
-            </div>
         </div>
     </header>
 
-    <!-- Main panel -->
+    <!-- Main Content -->
     <main class="container mb-5">
         <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-9">
-                <div class="card p-3 p-md-4">
-                    <div class="card-body p-3 p-md-4">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-body p-4">
                         <!-- Input Form -->
                         <form id="form">
-                            <div class="mb-5">
-                                <label for="javascriptCode" class="form-label">
-                                    <i class="fas fa-terminal me-2"></i> JavaScript source
+                            <div class="mb-4">
+                                <label for="javascriptCode" class="form-label fw-bold">
+                                    <i class="fas fa-code me-2"></i>JavaScript Code Here 
                                 </label>
                                 <textarea 
                                     id="javascriptCode" 
                                     class="form-control" 
-                                    placeholder="// Paste your confidential JS here ...&#10;function calculateSecret(user) {&#10;    return user.apiKey + '--protected';&#10;}"
-                                    rows="6"
+                                    placeholder="Paste your JavaScript code here..."
                                     required
                                 ></textarea>
                             </div>
 
-                            <div class="mb-5">
-                                <label for="lockDomains" class="form-label">
-                                    <i class="fas fa-globe me-2"></i> Domain lock (optional)
+                            <div class="mb-4">
+                                <label for="lockDomains" class="form-label fw-bold">
+                                    <i class="fas fa-lock me-2"></i>Domain Lock (Optional)
                                 </label>
                                 <textarea 
                                     id="lockDomains" 
                                     class="form-control" 
                                     rows="2"
-                                    placeholder="e.g., myapp.com, staging.myapp.com, localhost"
+                                    placeholder="Enter allowed domains (comma separated) e.g., example.com,sub.example.com"
                                 ></textarea>
-                                <div class="form-text"><i class="fas fa-info-circle"></i> Restrict execution to specific domains</div>
+                                <div class="form-text">Only these domains will be able to run the obfuscated code</div>
                             </div>
 
-                            <div class="mb-5">
-                                <label class="form-label d-block mb-3">
-                                    <i class="fas fa-shield-virus me-2"></i> Obfuscation intensity
+                            <div class="mb-4">
+                                <label class="form-label fw-bold d-block mb-3">
+                                    <i class="fas fa-shield-alt me-2"></i>Security Level
                                 </label>
-                                <div class="d-flex flex-wrap gap-3 mb-4">
-                                    <button type="button" class="security-level-btn" data-level="basic">
-                                        <i class="fas fa-lock-open"></i> Basic
-                                        <span class="badge-pill-custom">L1</span>
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-secondary security-level-btn position-relative" 
+                                        data-level="basic"
+                                    >
+                                        <i class="fas fa-lock-open me-2"></i>Basic
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">1</span>
+                                        <div class="security-tooltip">
+                                            Basic obfuscation with minimal performance impact. Suitable for simple protection needs.
+                                        </div>
                                     </button>
-                                    <button type="button" class="security-level-btn active" data-level="standard">
-                                        <i class="fas fa-shield"></i> Standard
-                                        <span class="badge-pill-custom">L2</span>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-primary security-level-btn position-relative active" 
+                                        data-level="standard"
+                                    >
+                                        <i class="fas fa-lock me-2"></i>Standard
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">2</span>
+                                        <div class="security-tooltip">
+                                            Balanced protection with control flow flattening. Recommended for most applications.
+                                        </div>
                                     </button>
-                                    <button type="button" class="security-level-btn" data-level="advanced">
-                                        <i class="fas fa-shield-halbed"></i> Advanced
-                                        <span class="badge-pill-custom">L3</span>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-primary security-level-btn position-relative" 
+                                        data-level="advanced"
+                                    >
+                                        <i class="fas fa-lock me-2"></i>Advanced
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">3</span>
+                                        <div class="security-tooltip">
+                                            Strong protection with self-defending code. Ideal for sensitive client-side logic.
+                                        </div>
                                     </button>
-                                    <button type="button" class="security-level-btn" data-level="enterprise">
-                                        <i class="fas fa-crown"></i> Enterprise
-                                        <span class="badge-pill-custom">L4</span>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-danger security-level-btn position-relative" 
+                                        data-level="enterprise"
+                                    >
+                                        <i class="fas fa-shield-alt me-2"></i>Enterprise
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">4</span>
+                                        <div class="security-tooltip">
+                                            Professional-grade protection with multiple layers. For high-security applications.
+                                        </div>
                                     </button>
-                                    <button type="button" class="security-level-btn" data-level="ultra">
-                                        <i class="fas fa-dragon"></i> ULTRA
-                                        <span class="badge-pill-custom">MAX</span>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-danger security-level-btn position-relative" 
+                                        data-level="ultra"
+                                    >
+                                        <i class="fas fa-user-secret me-2"></i>Ultra
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">5</span>
+                                        <div class="security-tooltip">
+                                            Maximum security with heavy obfuscation. May impact performance significantly.
+                                        </div>
                                     </button>
                                 </div>
-                                <div class="d-flex justify-content-between small text-muted mb-1 px-1">
-                                    <span>⚡ performance →</span>
-                                    <span>🛡️ security →</span>
+                                <div class="d-flex justify-content-between small text-muted mb-1">
+                                    <span>Performance</span>
+                                    <span>Security</span>
                                 </div>
                                 <div class="performance-meter">
-                                    <div id="performanceMeterFill" class="performance-meter-fill" style="width: 70%"></div>
+                                    <div id="performanceMeterFill" class="performance-meter-fill bg-success" style="width: 80%"></div>
                                 </div>
-                                <p id="securityDescription" class="text-muted small mt-3 mb-0">
-                                    <i class="fas fa-info-circle me-1"></i> Standard: Control flow + dead code injection, debug protection.
-                                </p>
+                                <p id="securityDescription" class="text-muted small mt-2">Standard protection with control flow flattening and debug protection</p>
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-3 fw-bold">
-                                <i class="fas fa-mask me-2"></i> OBFUSCATE & PROTECT
+                                <i class="fas fa-lock me-2"></i>Obfuscate & Protect
                             </button>
                         </form>
 
-                        <!-- Output form (hidden initially) -->
-                        <form id="form2" class="mt-5 d-none">
+                        <!-- Output Form -->
+                        <form id="form2" class="mt-4 d-none">
                             <div class="mb-4">
-                                <label for="output" class="form-label">
-                                    <i class="fas fa-code-branch me-2"></i> Obfuscated output
+                                <label for="output" class="form-label fw-bold">
+                                    <i class="fas fa-file-code me-2"></i>Obfuscated Output
                                 </label>
                                 <textarea 
                                     id="output" 
                                     class="form-control" 
-                                    rows="7"
-                                    readonly
-                                    style="background-color:#030303; color:#b9f2ff;"
+                                    disabled
                                 ></textarea>
                             </div>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <button id="obfuscateAnotherCode" type="button" class="btn btn-outline-primary w-100 py-2">
-                                        <i class="fas fa-undo-alt me-2"></i> New Obfuscation
+                                    <button 
+                                        id="obfuscateAnotherCode" 
+                                        type="button" 
+                                        class="btn btn-outline-primary w-100 py-2"
+                                    >
+                                        <i class="fas fa-redo me-2"></i>Obfuscate Another
                                     </button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button id="copyBtn" type="button" class="btn btn-success w-100 py-2">
-                                        <i class="fas fa-copy me-2"></i> Copy to Clipboard
+                                    <button 
+                                        id="copyBtn" 
+                                        type="button" 
+                                        class="btn btn-success w-100 py-2"
+                                    >
+                                        <i class="fas fa-copy me-2"></i>Copy Code
                                     </button>
                                 </div>
                                 <div class="col-12">
-                                    <button id="downloadBtn" type="button" class="btn btn-outline-primary w-100 py-2">
-                                        <i class="fas fa-save me-2"></i> Download .js file
+                                    <button 
+                                        id="downloadBtn" 
+                                        type="button" 
+                                        class="btn btn-outline-dark w-100 py-2"
+                                    >
+                                        <i class="fas fa-download me-2"></i>Download as File
                                     </button>
                                 </div>
                             </div>
@@ -381,341 +378,24 @@
         </div>
     </main>
 
-    <!-- Footer - auto-updated year -->
-    <footer class="py-4 mt-3">
+    <!-- Footer -->
+    <footer class="py-4 mt-auto">
         <div class="container text-center">
-            <p class="mb-0 small">
-                <i class="far fa-copyright me-1"></i> <span id="currentYear"></span> NEMESIS ENC EDITION — JavaScript Obfuscator. All nightmares reserved. Ridz coder<span class="mx-1">✦</span>
-            </p>
-            <p class="mb-0 mt-2 text-secondary-emphasis fs-6 opacity-50">
-                <i class="fas fa-skull-crossbones"></i> ultimate protection · zero light
+            <p class="mb-0">
+                © 2023 - <span id="currentYear"></span> Airbyte Synergetic Labs. All rights reserved. Ridz Coder
             </p>
         </div>
     </footer>
 
-    <!-- Load external libs -->
+    <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- JavaScript Obfuscator from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator@4.1.0/dist/index.browser.js"></script>
-    
-    <script>
-        (function(){
-            // DOM elements
-            const codeInput = document.getElementById('javascriptCode');
-            const domainInput = document.getElementById('lockDomains');
-            const form = document.getElementById('form');
-            const form2 = document.getElementById('form2');
-            const outputArea = document.getElementById('output');
-            const securityBtns = document.querySelectorAll('.security-level-btn');
-            const perfFill = document.getElementById('performanceMeterFill');
-            const securityDesc = document.getElementById('securityDescription');
-            const obfuscateAnother = document.getElementById('obfuscateAnotherCode');
-            const copyBtn = document.getElementById('copyBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
-            
-            let currentLevel = 'standard';   // default active
-            let currentObfuscatedCode = '';
-            
-            // Performance & description mapping (bigger boxes / all black)
-            const levelConfig = {
-                basic: {
-                    perfWidth: 92,
-                    desc: '🔓 Basic: variable renaming, string array. Minimal impact, fast execution.',
-                    obfOptions: {
-                        compact: true,
-                        controlFlowFlattening: false,
-                        deadCodeInjection: false,
-                        debugProtection: false,
-                        renameGlobals: false,
-                        stringArray: true,
-                        stringArrayThreshold: 0.5,
-                        rotateStringArray: true,
-                        selfDefending: false,
-                        splitStrings: false
-                    }
-                },
-                standard: {
-                    perfWidth: 70,
-                    desc: '⚙️ Standard: control flow flattening + dead code injection + debug trap. Balanced security.',
-                    obfOptions: {
-                        compact: true,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 0.75,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 0.4,
-                        debugProtection: true,
-                        debugProtectionInterval: false,
-                        renameGlobals: false,
-                        stringArray: true,
-                        stringArrayThreshold: 0.8,
-                        rotateStringArray: true,
-                        selfDefending: false,
-                        splitStrings: false,
-                        unicodeEscapeSequence: false
-                    }
-                },
-                advanced: {
-                    perfWidth: 52,
-                    desc: '🧠 Advanced: self-defending + identifier renaming + heavy control flow + anti-debug.',
-                    obfOptions: {
-                        compact: true,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 0.6,
-                        debugProtection: true,
-                        debugProtectionInterval: true,
-                        renameGlobals: true,
-                        renameProperties: false,
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        rotateStringArray: true,
-                        selfDefending: true,
-                        splitStrings: true,
-                        splitStringsChunkLength: 8,
-                        unicodeEscapeSequence: false
-                    }
-                },
-                enterprise: {
-                    perfWidth: 35,
-                    desc: '🏢 Enterprise: domain locking + property renaming + self-defending + transform object keys. Very strong.',
-                    obfOptions: {
-                        compact: true,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 0.8,
-                        debugProtection: true,
-                        debugProtectionInterval: true,
-                        renameGlobals: true,
-                        renameProperties: true,
-                        renamePropertiesMode: 'safe',
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        rotateStringArray: true,
-                        selfDefending: true,
-                        splitStrings: true,
-                        splitStringsChunkLength: 6,
-                        unicodeEscapeSequence: true,
-                        forceTransformStrings: ['api', 'key', 'token']
-                    }
-                },
-                'ultra': {
-                    perfWidth: 18,
-                    desc: '💀 ULTRA MODE: max security, heavy performance penalty. Extreme obfuscation + domain lock enforcement + anti-tamper.',
-                    obfOptions: {
-                        compact: true,
-                        controlFlowFlattening: true,
-                        controlFlowFlatteningThreshold: 1,
-                        deadCodeInjection: true,
-                        deadCodeInjectionThreshold: 1,
-                        debugProtection: true,
-                        debugProtectionInterval: true,
-                        renameGlobals: true,
-                        renameProperties: true,
-                        renamePropertiesMode: 'unsafe',
-                        stringArray: true,
-                        stringArrayThreshold: 1,
-                        rotateStringArray: true,
-                        selfDefending: true,
-                        splitStrings: true,
-                        splitStringsChunkLength: 4,
-                        unicodeEscapeSequence: true,
-                        forceTransformStrings: ['.*'],
-                        domainLock: [], // dynamic domain lock will be added later if provided
-                        reservedNames: []
-                    }
-                }
-            };
-            
-            // update UI for selected level
-            function setActiveLevel(level) {
-                currentLevel = level;
-                securityBtns.forEach(btn => {
-                    const btnLevel = btn.getAttribute('data-level');
-                    if (btnLevel === level) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                const cfg = levelConfig[level];
-                if (cfg) {
-                    perfFill.style.width = cfg.perfWidth + '%';
-                    securityDesc.innerHTML = `<i class="fas fa-chart-line me-1"></i> ${cfg.desc}`;
-                }
-            }
-            
-            // event listeners for level buttons
-            securityBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const level = btn.getAttribute('data-level');
-                    setActiveLevel(level);
-                });
-            });
-            
-            // Helper: domain lock preprocessing - adds domain lock wrapper if domains provided
-            function applyDomainLock(originalCode, domainsStr) {
-                if (!domainsStr || domainsStr.trim() === "") return originalCode;
-                let domains = domainsStr.split(',').map(d => d.trim().toLowerCase()).filter(d => d);
-                if (domains.length === 0) return originalCode;
-                const domainCheckFunction = `
-(function() {
-    var allowedDomains = ${JSON.stringify(domains)};
-    var host = window.location.hostname;
-    var isValid = allowedDomains.some(function(domain) {
-        return host === domain || host.endsWith('.' + domain);
-    });
-    if (!isValid) {
-        console.error('Domain not authorized');
-        throw new Error('Execution blocked: unauthorized domain');
-    }
-})();
-`;
-                return domainCheckFunction + "\n" + originalCode;
-            }
-            
-            // main obfuscation handler
-            async function performObfuscation(e) {
-                e.preventDefault();
-                let sourceCode = codeInput.value.trim();
-                if (!sourceCode) {
-                    showToast("⚠️ Please insert JavaScript code", 2500);
-                    return;
-                }
-                
-                let domainsRaw = domainInput.value;
-                let finalSource = sourceCode;
-                // add domain lock before obfuscation (domain lock is part of protection)
-                if (domainsRaw && domainsRaw.trim() !== "") {
-                    finalSource = applyDomainLock(sourceCode, domainsRaw);
-                }
-                
-                const level = currentLevel;
-                let obfOptions = { ...levelConfig[level].obfOptions };
-                
-                // Special: for ultra domain lock handling also if domains were provided we merge domainLock option
-                if (level === 'ultra' && domainsRaw && domainsRaw.trim() !== "") {
-                    let domainsList = domainsRaw.split(',').map(d => d.trim()).filter(d => d);
-                    if (domainsList.length) {
-                        obfOptions.domainLock = domainsList;
-                        // remove our manual wrapper to avoid duplication, because javascript-obfuscator supports domainLock natively.
-                        // but our manual wrapper might conflict, so re-extract source without domain wrapper
-                        if (finalSource.includes('allowedDomains') && finalSource.includes('window.location.hostname')) {
-                            finalSource = sourceCode; // revert to original because obfuscator will handle domainLock
-                        }
-                    }
-                }
-                
-                // small fix: for non-ultra levels but domainLock can be injected via custom wrapper, already added.
-                // performance: show loading indicator
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Obfuscating ...';
-                submitBtn.disabled = true;
-                
-                try {
-                    // For advanced/enterprise sometimes takes a moment
-                    let obfuscatedResult;
-                    if (typeof JavaScriptObfuscator !== 'undefined') {
-                        obfuscatedResult = JavaScriptObfuscator.obfuscate(finalSource, obfOptions);
-                        let obfuscatedCode = obfuscatedResult.getObfuscatedCode();
-                        currentObfuscatedCode = obfuscatedCode;
-                        outputArea.value = obfuscatedCode;
-                        // show output form
-                        form.classList.add('d-none');
-                        form2.classList.remove('d-none');
-                        showToast("✅ Code obfuscated successfully", 2000);
-                    } else {
-                        throw new Error("Obfuscator library not loaded");
-                    }
-                } catch (err) {
-                    console.error(err);
-                    showToast("❌ Obfuscation failed: " + (err.message || "invalid code"), 3000);
-                } finally {
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                }
-            }
-            
-            // toast notification (dark)
-            let toastElement = null;
-            function showToast(message, duration = 2000) {
-                if (toastElement) toastElement.remove();
-                const div = document.createElement('div');
-                div.className = 'toast-custom';
-                div.innerHTML = `<i class="fas fa-robot me-2"></i> ${message}`;
-                document.body.appendChild(div);
-                toastElement = div;
-                setTimeout(() => {
-                    if (div) div.style.opacity = '0';
-                    setTimeout(() => div.remove(), 300);
-                }, duration);
-            }
-            
-            // copy functionality
-            copyBtn?.addEventListener('click', async () => {
-                if (!currentObfuscatedCode) {
-                    showToast("No obfuscated code available", 1500);
-                    return;
-                }
-                try {
-                    await navigator.clipboard.writeText(currentObfuscatedCode);
-                    showToast("📋 Copied to clipboard", 1500);
-                } catch (err) {
-                    showToast("Could not copy", 1200);
-                }
-            });
-            
-            // download as .js file
-            downloadBtn?.addEventListener('click', () => {
-                if (!currentObfuscatedCode) {
-                    showToast("Nothing to download", 1500);
-                    return;
-                }
-                const blob = new Blob([currentObfuscatedCode], {type: 'application/javascript'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `veronica_obfuscated_${Date.now()}.js`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast("⬇️ File download started", 1500);
-            });
-            
-            // "obfuscate another" resets view
-            obfuscateAnother?.addEventListener('click', () => {
-                form2.classList.add('d-none');
-                form.classList.remove('d-none');
-                codeInput.value = '';
-                domainInput.value = '';
-                currentObfuscatedCode = '';
-                outputArea.value = '';
-                setActiveLevel('standard');
-                showToast("Ready for new obfuscation", 1200);
-            });
-            
-            // form submit event
-            form.addEventListener('submit', performObfuscation);
-            
-            // auto update current year in footer
-            const yearSpan = document.getElementById('currentYear');
+    <script src="https://cdn.jsdelivr.net/npm/javascript-obfuscator/dist/index.browser.js"></script>
+<script>            const yearSpan = document.getElementById('currentYear');
             if (yearSpan) {
                 yearSpan.textContent = new Date().getFullYear();
             }
-            
-            // initialize performance meter with default standard level
-            setActiveLevel('standard');
-            
-            // make text areas larger by default already set via CSS min-height
-            // extra: if user wants to prefill some demo code (optional but friendly)
-            if (codeInput.value.trim() === "") {
-                codeInput.value = `// === nemesis Black Obfuscator Demo ===\nconst apiEndpoint = "https://api.secret.com/v1";\n\nfunction authenticate(userKey) {\n    const token = btoa(userKey + ":secure");\n    return { auth: token, timestamp: Date.now() };\n}\n\nconsole.log(authenticate("demo_key"));`;
-            }
-        })();
-    </script>
+         </script>   
+    <!-- Main Application Script -->
+    <script src="app.js"></script>
 </body>
-</html>
-`
+                                </html>
